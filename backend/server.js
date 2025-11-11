@@ -1,0 +1,46 @@
+// server.js
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const { connectDB } = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+// const employeeRoutes = require('./routes/employeeRoutes');
+const branchRoutes = require('./routes/branchRoutes');
+const deviceRoutes = require('./routes/deviceRoutes');
+const { errorHandler } = require('./middleware/errorMiddleware');
+
+dotenv.config();
+connectDB();
+
+const app = express();
+
+// Middleware
+app.use(helmet());
+app.use(cors());
+app.use(express.json()); // parse JSON request bodies
+if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per window
+});
+app.use(limiter);
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/branches', branchRoutes);
+app.use('/api/devices', deviceRoutes);
+
+// Test route
+app.get('/', (req, res) => res.json({ message: 'Project IMS backend running' }));
+
+// Error handling middleware
+app.use(errorHandler);
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

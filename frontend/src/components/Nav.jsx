@@ -30,7 +30,7 @@ export default function Nav() {
           <div className="brand">
             <Link to="/">
               <img
-                src="https://play-lh.googleusercontent.com/NCklXouWHKQdxkp5uFOCGAK8Kj86SS2LSRQfyKR_8yHBETnPNa9NDs_nylh8n3pH-j4=w600-h300-pc0xffffff-pd"
+                src="https://play-lh.googleusercontent.com/zW5KMgLpmTvg0TA4xYIztb5HedXa6mqbAflXHBnNWix5kKetiqtR1ZOqNghuBtleiJkN"
                 className="logo"
                 alt="IMS Logo"
               />
@@ -66,12 +66,12 @@ export default function Nav() {
             ) : (
               <>
                 {location.pathname !== '/login' && (
-                  <button className="btn" onClick={handleSignIn}>
+                  <button className="sign" onClick={handleSignIn}>
                     Sign in
                   </button>
                 )}
                 {location.pathname !== '/register' && (
-                  <button className="btn btn-outline" onClick={handleSignUp}>
+                  <button className="sign" onClick={handleSignUp}>
                     Sign up
                   </button>
                 )}

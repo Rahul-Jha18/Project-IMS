@@ -121,29 +121,31 @@ body {
 /* Sign In / Logout Button Styles */
 .btn, .btn-ghost {
   font-size: 1.25rem;
+  font-weight: 600;
+  background: rgba(3, 134, 241, 0.966);
+  color: #413e3e;
   padding: 5px 14px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
-.btn {
-  color: #554f4f;
-  border: none;
-  background: transparent;
-  border: 1px solid #30a0a0; 
-  box-shadow: 4px 4px 8px rgba(46, 43, 43, 0.184);
+.sign, .btn[type=submit]{
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: rgba(7, 130, 245, 0.966);
+  color: #3f3939;
+  padding: 5px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-.btn-ghost {
-  background: rgb(15, 157, 252);
-  color: #ffffff;
-  border: 1px solid rgba(7, 50, 245, 0.459);
-  max-width: 120px;
+.sign:hover, .btn[type=submit]:hover{
+  background: rgba(16, 255, 136, 0.596);
+  color: #3f3939;
 }
-
 .btn:hover, .btn-ghost:hover {
   background: rgba(245, 35, 7, 0.966);
-  color: #000000;
+  color: #3f3939;
   box-shadow: 12px 8px 16px rgba(0, 0, 0, 0.2);
 }
 /* General page layout */

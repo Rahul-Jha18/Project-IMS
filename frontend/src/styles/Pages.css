@@ -85,7 +85,7 @@ p {
   margin-top: 15px;
 }
 
-a, {
+a {
   color: #6c63ff;
   text-decoration: none;
   font-weight: 500;
@@ -116,7 +116,6 @@ p[style*="color:red"] {
 /* ---------- DEVICE PAGE ---------- */
 .device-page {
   width: 100%;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -139,9 +138,11 @@ p[style*="color:red"] {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding: 20px;
   flex-wrap: wrap;
   gap: 1rem;
 }
+
 .Controls_device{
   display: flex;
   justify-content: center;
@@ -189,6 +190,7 @@ p[style*="color:red"] {
 .device-table {
   width: 100%;
   border-collapse: collapse;
+  padding: 20px;
   margin-bottom: 30px;
 }
 

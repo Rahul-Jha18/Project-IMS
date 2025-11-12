@@ -9,7 +9,7 @@ require('./models/User'); // ensure the User model is loaded
     console.log(' Database sync complete!');
     process.exit(0);
   } catch (err) {
-    console.error('❌ Error syncing database:', err);
+    console.error(' Error syncing database:', err);
     process.exit(1);
   }
 })();

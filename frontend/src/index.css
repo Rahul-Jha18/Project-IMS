@@ -124,7 +124,6 @@ body {
   padding: 5px 14px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
   transition: all 0.3s ease;
 }
 
@@ -136,15 +135,15 @@ body {
   box-shadow: 4px 4px 8px rgba(46, 43, 43, 0.184);
 }
 .btn-ghost {
-  background: transparent;
-  color: #45656f;
-  border: 1px solid #0365d675;
+  background: rgb(15, 157, 252);
+  color: #ffffff;
+  border: 1px solid rgba(7, 50, 245, 0.459);
   max-width: 120px;
 }
 
 .btn:hover, .btn-ghost:hover {
-  background: #039ad6f1;
-  color: #fff;
+  background: rgba(245, 35, 7, 0.966);
+  color: #000000;
   box-shadow: 12px 8px 16px rgba(0, 0, 0, 0.2);
 }
 /* General page layout */
@@ -227,21 +226,23 @@ body {
 }
 
 .feature-link {
+  display: inline-block;
+  margin-top: 8px;
+  background-color: #0366d6;
+  color: white;
   text-decoration: none;
-  line-height: 1.5;
-  color: #007bff;
-  font-size: 1.25rem;
-  font-weight: bold;
-  padding: 3px 14px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-shadow: 4px 4px 8px #2e2b2b2f;
+  font-weight: normal;
+  padding: 1px 30px;
+  border: 1px solid #0318d6;
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
 .feature-link:hover {
-  text-decoration: underline;
-  background-color: #007bff;
+  transform: scale(1.1);
+  background-color: green;
   color: #fff;
+  text-decoration: none;
 }
 
 .feature-image img {
@@ -249,21 +250,6 @@ body {
   min-height: 30vh;
   border-radius: 10px;
 }
-
-
-/* Link Styling */
-.feature-link {
-  display: inline-block;
-  margin-top: 8px;
-  color: #0366d6;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.feature-link:hover {
-  text-decoration: underline;
-}
-
 /* Spacer before Footer */
 .footer-spacer {
   height: 40px;

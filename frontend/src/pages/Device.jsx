@@ -73,13 +73,13 @@ export default function Device() {
           ...newDevice,
           branchId: Number(newDevice.branchId),
         });
-        alert('✅ Device updated successfully!');
+        alert(' Device updated successfully!');
       } else {
         await addDevice(token, {
           ...newDevice,
           branchId: Number(newDevice.branchId),
         });
-        alert('✅ Device added successfully!');
+        alert(' Device added successfully!');
       }
       setNewDevice({ id: null, name: '', ip: '', model: '', branchId: '', status: 'Active' });
       setShowForm(false);
@@ -100,11 +100,11 @@ export default function Device() {
     if (!window.confirm('Are you sure you want to delete this device?')) return;
     try {
       await deleteDevice(token, id);
-      alert('✅ Device deleted successfully!');
+      alert(' Device deleted successfully!');
       fetchDevices(selectedBranch);
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || '❌ Failed to delete device');
+      alert(err.response?.data?.message || ' Failed to delete device');
     }
   };
 
@@ -117,7 +117,7 @@ export default function Device() {
 
         <div className="device-controls">
           <div className="branch-filter">
-            <label style={{ fontSize: '20px', marginRight: '10px' }}>Filter by Branch:</label>
+            Filter by Branch: 
             <select value={selectedBranch} onChange={handleBranchChange}>
               <option value="">All Branches</option>
               {branches.map((b) => (

@@ -4,7 +4,6 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-content">
-        {/* About / Description */}
         <div className="footer-about">
           <h4>Nepal Life Insurance</h4>
           <p>

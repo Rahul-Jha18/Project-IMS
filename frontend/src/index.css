@@ -3,23 +3,12 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Slightly more modern font */
   margin: 0;
   padding: 0;
-  background: #f5f7fb;
+  background: transparent;
   color: #333;
 }
-
-/* Container for main content */
-/* .container {
-  max-width: 1200px;
-  margin: 24px auto;
-  padding: 16px;
-  background: transparent;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-} */
-
 /* Global Navigation Bar */
 .global-nav {
-  background: #fff;
+  background: linear-gradient(45deg,rgba(0, 183, 255, 0.425),white,rgba(90, 185, 223, 0.493));
   position: relative;
   top: 0;
   z-index: 10;
@@ -61,18 +50,54 @@ body {
 .nav-menu a {
   color: #333;
   text-decoration: none;
-  padding: 8px 16px;
+  padding: 5px 16px;
   border-radius: 6px;
   font-weight: 500;
   transition: all 0.3s ease;
 }
+.news-bar {
+  background-color: rgba(63, 250, 16, 0.459);
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  overflow: hidden;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.news-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+  animation: scrollText 30s linear infinite;
+}
+
+.news-ticker span {
+  display: inline-block;
+  padding-right: 1vw; /* adds space before repeating */
+  font-weight: 500;
+  color: #333;
+}
+
+/* Continuous leftward scrolling */
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+
 
 /* Hover Effects for Nav Menu Links */
 .nav-menu a:hover {
-  background: rgba(3, 101, 214, 0.938);
-  text-decoration: underline rgba(229, 229, 236, 0.993);
-  color: rgb(255, 255, 255);
-  transform: translateY(-2px); /* Slight hover lift */
+  text-decoration:rgba(11, 167, 240, 0.993);
+  box-shadow: 4px 2px 12px rgba(0, 0, 0, 0.1);
+  color: rgb(4, 236, 81);
+  transform: translateY(-2px); 
 }
 
 /* User Profile and Logout Section */
@@ -87,7 +112,7 @@ body {
   color: #666;
   font-weight: 500;
   min-width: 100px;
-  background: #d1cdcd9a;
+  background: transparent;
   padding: 4px 10px;
   border-radius: 4px;
   text-align: center;
@@ -96,8 +121,8 @@ body {
 /* Sign In / Logout Button Styles */
 .btn, .btn-ghost {
   font-size: 1.25rem;
-  padding: 7px 14px;
-  border-radius: 4px;
+  padding: 5px 14px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
@@ -107,23 +132,27 @@ body {
   color: #554f4f;
   border: none;
   background: transparent;
-  border: 1px solid #bed8f7; 
+  border: 1px solid #30a0a0; 
+  box-shadow: 4px 4px 8px rgba(46, 43, 43, 0.184);
 }
 .btn-ghost {
   background: transparent;
-  color: #0366d6;
+  color: #45656f;
   border: 1px solid #0365d675;
   max-width: 120px;
 }
 
 .btn:hover, .btn-ghost:hover {
-  background: #0366d6;
+  background: #039ad6f1;
   color: #fff;
+  box-shadow: 12px 8px 16px rgba(0, 0, 0, 0.2);
 }
 /* General page layout */
 .landing-page {
   padding: 20px;
   text-align: center;
+  background: linear-gradient(180deg,white,rgba(70, 192, 248, 0.219),rgba(99, 188, 247, 0.485));
+ 
 }
 
 /* Greeting Section */
@@ -147,7 +176,7 @@ body {
   margin-top: 50px;
   padding: 5px;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  
 }
 
 .features-section h3 {

@@ -1,83 +1,92 @@
 const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const generateToken = require('../utils/generateToken');
 
-// ========================
-// REGISTER USER
-// ========================
+
+// Generate JWT
+
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role, // include role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+};
+
+
+// @desc Register new user
+// @route POST /api/auth/register
+
 exports.registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, is_admin = 0 } = req.body || {};
+  const { name, email, password, role } = req.body;
 
   if (!name || !email || !password) {
     res.status(400);
-    throw new Error('Name, email, and password are required');
+    throw new Error('Please provide all required fields.');
   }
 
-  const exists = await User.findOne({ where: { email } });
-  if (exists) {
+  const existing = await User.findOne({ where: { email } });
+  if (existing) {
     res.status(400);
-    throw new Error('User already exists');
+    throw new Error('User already exists.');
   }
 
-  // Sequelize model uses "isAdmin" property, not "is_admin"
-  const user = await User.create({
+  const newUser = await User.create({
     name,
     email,
     password,
-    isAdmin: is_admin,
+    role: role || 'user', // default to 'user'
   });
 
-  console.log('\n✅ New user registered:', user.email);
-
   res.status(201).json({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    is_admin: user.isAdmin ? 1 : 0,
-    token: generateToken(user.id),
+    id: newUser.id,
+    name: newUser.name,
+    email: newUser.email,
+    role: newUser.role,
+    token: generateToken(newUser),
   });
 });
 
 
-// ========================
-// LOGIN USER
-// ========================
-exports.loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body || {};
+// @desc Login user
+// @route POST /api/auth/login
 
-  if (!email || !password) {
-    res.status(400);
-    throw new Error('Email and password are required');
-  }
+exports.loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
 
   const user = await User.findOne({ where: { email } });
-
-  console.log('\n=== LOGIN DEBUG ===');
-  console.log('Email entered:', email);
-  console.log('User from DB:', user ? user.toJSON() : '❌ User not found');
-
-  if (!user) {
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user),
+    });
+  } else {
     res.status(401);
-    throw new Error('Invalid email or password (user not found)');
+    throw new Error('Invalid email or password');
   }
+});
 
-  const isMatch = await user.matchPassword(password);
-  console.log('Password entered (plaintext):', password);
-  console.log('Stored password hash:', user.password);
-  console.log('Password match result:', isMatch);
 
-  if (!isMatch) {
-    res.status(401);
-    throw new Error('Invalid email or password (password mismatch)');
-  }
+// @desc Get profile
+// @route GET /api/auth/profile
 
-  console.log('✅ Login successful for:', user.email);
-
-  res.json({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    is_admin: user.isAdmin ? 1 : 0,
-    token: generateToken(user.id),
+exports.getProfile = asyncHandler(async (req, res) => {
+  const user = await User.findByPk(req.user.id, {
+    attributes: ['id', 'name', 'email', 'role', 'createdAt'],
   });
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
 });

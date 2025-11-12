@@ -304,7 +304,7 @@ p[style*="color:red"] {
  /* //Branch Page  */
  .page-container {
   padding: 2rem;
-  background: #f9fafb;
+  background: linear-gradient(180deg,white,rgba(70, 192, 248, 0.219),rgba(99, 188, 247, 0.485));
   min-height: 100vh;
 }
 

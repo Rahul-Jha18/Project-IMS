@@ -19,9 +19,9 @@ export default function Branch() {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // ======================
+ 
   // Fetch branches
-  // ======================
+ 
   const fetchBranches = async () => {
     try {
       const res = await api.get("/api/branches", {
@@ -38,9 +38,9 @@ export default function Branch() {
     fetchBranches();
   }, []);
 
-  // ======================
+ 
   // Handle search
-  // ======================
+ 
   useEffect(() => {
     const results = branches.filter((b) =>
       b.name.toLowerCase().includes(search.toLowerCase())
@@ -48,17 +48,17 @@ export default function Branch() {
     setFilteredBranches(results);
   }, [search, branches]);
 
-  // ======================
+  
   // Handle input
-  // ======================
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ======================
+ 
   // Handle submit
-  // ======================
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -88,9 +88,9 @@ export default function Branch() {
     }
   };
 
-  // ======================
+ 
   // Handle edit
-  // ======================
+  
   const handleEdit = (branch) => {
     setForm({
       name: branch.name,
@@ -103,9 +103,9 @@ export default function Branch() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // ======================
+ 
   // Handle delete
-  // ======================
+ 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this branch?")) return;
     try {
@@ -120,14 +120,14 @@ export default function Branch() {
     }
   };
 
-  // ======================
+ 
   // JSX
-  // ======================
+ 
   return (
     <>
       <main className="page-container">
-        <div className="device-header">
-          <h2>🏢 Branch Management</h2>
+        <div className="device-header" style={{textAlign:"center"}}>
+          <h2>Branch Management</h2>
         </div>
 
         {/* ===== Controls ===== */}

@@ -1,3 +1,4 @@
+// frontend/src/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import api from '../services/api';
 
@@ -5,14 +6,13 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const rawLocal = localStorage.getItem('ims_user');
-    const rawSession = sessionStorage.getItem('ims_user');
-    if (rawLocal) return JSON.parse(rawLocal);
-    if (rawSession) return JSON.parse(rawSession);
-    return null;
+    const stored =
+      JSON.parse(localStorage.getItem('ims_user')) ||
+      JSON.parse(sessionStorage.getItem('ims_user'));
+    return stored || null;
   });
 
-  // Keep Authorization header synced with user token
+  // ✅ Sync axios headers & storage
   useEffect(() => {
     if (user?.token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
@@ -31,11 +31,18 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // ✅ Normalize backend field here (backend sends is_admin = 0 or 1)
+  // ✅ Normalize backend data (role-based)
   const login = (data, remember = true) => {
+    const role = (data.role || '').toLowerCase();
     const normalizedUser = {
-      ...data,
-      isAdmin: data.is_admin === 1 || data.is_admin === true, // convert numeric/boolean to boolean
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      token: data.token,
+      role,
+      isAdmin: role === 'admin',
+      isSubAdmin: role === 'subadmin',
+      isUser: role === 'user',
       remember,
     };
     setUser(normalizedUser);
@@ -44,11 +51,20 @@ export const AuthProvider = ({ children }) => {
   const logout = () => setUser(null);
 
   return (
-    <AuthContext.Provider value={{ user, token: user?.token, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token: user?.token,
+        login,
+        logout,
+        isAdmin: user?.isAdmin,
+        isSubAdmin: user?.isSubAdmin,
+        isUser: user?.isUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
-  

@@ -4,14 +4,19 @@ const {
   createBranch,
   updateBranch,
   deleteBranch
-} = require('../controllers/branchContoller');
+} = require('../controllers/branchController');
 const { protect } = require('../middleware/authMiddleware');
-const { adminOnly } = require('../middleware/adminMiddleware');
+const { allowRoles } = require('../middleware/roleMiddleware');
+
 const router = express.Router();
 
 router.get('/', protect, getBranches);
-router.post('/', protect, adminOnly, createBranch);
-router.put('/:id', protect, adminOnly, updateBranch);
-router.delete('/:id', protect, adminOnly, deleteBranch);
+
+// Admin and Sub-Admin can create or update
+router.post('/', protect, allowRoles('admin', 'sub-admin'), createBranch);
+router.put('/:id', protect, allowRoles('admin', 'sub-admin'), updateBranch);
+
+// Only Admin can delete
+router.delete('/:id', protect, allowRoles('admin'), deleteBranch);
 
 module.exports = router;

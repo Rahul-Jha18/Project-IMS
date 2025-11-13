@@ -30,24 +30,28 @@ export default function Login() {
   const submit = async (e) => {
     e.preventDefault();
     setError('');
+
     try {
       const data = await loginApi(email, password);
 
+      // Save "Remember me" credentials
       if (remember) {
         localStorage.setItem('ims_creds', JSON.stringify({ email, password }));
       } else {
         localStorage.removeItem('ims_creds');
       }
 
-      login(data);
+      // Store user info in AuthContext
+      login(data, remember);
 
-      // ✅ Redirect based on role
-      if (data.isAdmin) {
+      // Redirect based on role
+      if (data.role === 'admin') {
         navigate('/AdminRequests');
+      } else if (data.role === 'subadmin') {
+        navigate('/AdminRequests'); // sub-admin uses same dashboard
       } else {
         navigate('/');
       }
-
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -70,6 +74,7 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
         <div style={{ margin: '8px 0' }}>
           <label>
             <input
@@ -81,6 +86,7 @@ export default function Login() {
             Remember me
           </label>
         </div>
+
         <button className="btn" type="submit">Login</button>
         <p>Not registered? <Link to="/register">Register</Link></p>
         {error && <p style={{ color: 'red' }}>{error}</p>}

@@ -36,9 +36,9 @@ export default function Nav() {
           <div className="brand">
             <Link to="/" onClick={() => setMenuOpen(false)}>
               <img
-                src="https://play-lh.googleusercontent.com/zW5KMgLpmTvg0TA4xYIztb5HedXa6mqbAflXHBnNWix5kKetiqtR1ZOqNghuBtleiJkN"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6NUdvwqedSBwUU48qGwAkHfTH9hw3_aqbRQ&s"
                 className="logo"
-                alt="IMS Logo"
+                alt="NLI lOGO"
               />
             </Link>
           </div>
@@ -56,12 +56,13 @@ export default function Nav() {
               <Link to="/InfoPage" onClick={() => setMenuOpen(false)}>Information</Link>
               <Link to="/branches" onClick={() => setMenuOpen(false)}>Branches</Link>
               <Link to="/devices" onClick={() => setMenuOpen(false)}>Devices</Link>
-              {user?.isAdmin ? (
-                <Link to="/AdminRequests" onClick={() => setMenuOpen(false)}>Requests</Link>
+                          {(user?.isAdmin || user?.isSubAdmin) ? (
+                <Link to="/AdminRequests">Requests</Link>
               ) : (
-                <Link to="/Request" onClick={() => setMenuOpen(false)}>Requests</Link>
+                <Link to="/Request">Requests</Link>
               )}
 
+                
               {/* User Buttons (visible in small screen menu) */}
               <div className="mobile-nav-actions">
                 {user ? (
@@ -85,11 +86,12 @@ export default function Nav() {
 
           {/* Desktop Buttons */}
           <div className="nav-right">
-            {user && !user.isAdmin && (
+                        {user && user.role === 'user' && (
               <Link to="/Request" className="icon-btn" title="Submit Request">
                 <Bell size={22} style={{ color: 'red', marginTop: '0.8rem' }} />
               </Link>
-            )}
+            )}  
+
             {user ? (
               <>
                 <span className="user">Hi, {user.name}</span>

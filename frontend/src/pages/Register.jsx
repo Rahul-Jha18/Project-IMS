@@ -1,3 +1,4 @@
+// src/pages/Register.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { register as registerApi } from '../services/authService';
@@ -17,7 +18,7 @@ export default function Register() {
     setError('');
     try {
       const data = await registerApi(name, email, password);
-      login(data);
+      login(data); // save to auth context
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Register failed');
@@ -28,12 +29,28 @@ export default function Register() {
     <div className="form-container">
       <h3>Register</h3>
       <form className="form" onSubmit={submit}>
-        <input className="input" placeholder="Full name" value={name} onChange={e => setName(e.target.value)} />
-        <input className="input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input className="input" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input
+          className="input"
+          placeholder="Full name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
+        <input
+          className="input"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+        <input
+          className="input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
         <button className="btn" type="submit">Register</button>
         <p>Already have an account? <Link to="/login">Login</Link></p>
-        {error && <p style={{color:'red'}}>{error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
     </div>
   );

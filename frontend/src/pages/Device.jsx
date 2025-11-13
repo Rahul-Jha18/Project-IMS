@@ -1,3 +1,4 @@
+// src/pages/Device.jsx
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getBranches } from '../services/branchService';
@@ -86,7 +87,7 @@ export default function Device() {
       fetchDevices(selectedBranch);
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || '❌ Failed to save device');
+      alert(err.response?.data?.message || ' Failed to save device');
     }
   };
 
@@ -117,7 +118,7 @@ export default function Device() {
 
         <div className="device-controls">
           <div className="branch-filter">
-            Filter by Branch: 
+            Filter by Branch:{' '}
             <select value={selectedBranch} onChange={handleBranchChange}>
               <option value="">All Branches</option>
               {branches.map((b) => (
@@ -135,11 +136,18 @@ export default function Device() {
           />
 
           {/* Only admin can see Add button */}
-          {user?.is_admin === 1 && (
+          {user?.isAdmin && (
             <button
               className="Add-btn"
               onClick={() => {
-                setNewDevice({ id: null, name: '', ip: '', model: '', branchId: '', status: 'Active' });
+                setNewDevice({
+                  id: null,
+                  name: '',
+                  ip: '',
+                  model: '',
+                  branchId: '',
+                  status: 'Active',
+                });
                 setShowForm(!showForm);
               }}
             >
@@ -149,7 +157,7 @@ export default function Device() {
         </div>
 
         {/* ===== Only Admin Can See Add/Edit Form ===== */}
-        {user?.is_admin === 1 && showForm && (
+        {user?.isAdmin && showForm && (
           <section className="add-device">
             <h3>{newDevice.id ? 'Edit Device' : 'Add New Device'}</h3>
             <form onSubmit={handleSubmitDevice}>
@@ -177,58 +185,80 @@ export default function Device() {
                 onChange={handleInputChange}
                 required
               />
-              <select name="branchId" value={newDevice.branchId} onChange={handleInputChange} required>
+              <select
+                name="branchId"
+                value={newDevice.branchId}
+                onChange={handleInputChange}
+                required
+              >
                 <option value="">Select Branch</option>
                 {branches.map((b) => (
                   <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>
-              <select name="status" value={newDevice.status} onChange={handleInputChange} required>
+              <select
+                name="status"
+                value={newDevice.status}
+                onChange={handleInputChange}
+                required
+              >
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
-              <button type="submit">{newDevice.id ? 'Update Device' : 'Add Device'}</button>
+              <button type="submit">
+                {newDevice.id ? 'Update Device' : 'Add Device'}
+              </button>
             </form>
           </section>
         )}
-        
+
         {/* ===== Devices Table ===== */}
-        <div className='d-table'>
-        <table className="device-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>IP</th>
-              <th>Model</th>
-              <th>Branch</th>
-              <th>Status</th>
-              {user?.is_admin === 1 && <th>Actions</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDevices.length ? (
-              filteredDevices.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.name}</td>
-                  <td>{d.ip}</td>
-                  <td>{d.model}</td>
-                  <td>{d.branch?.name || 'N/A'}</td>
-                  <td>{d.status}</td>
-                  {user?.is_admin === 1 && (
-                    <td>
-                      <button className="btn-edit" onClick={() => handleEditDevice(d)}>Edit</button>
-                      <button className="btn-delete" onClick={() => handleDeleteDevice(d.id)}>Delete</button>
-                    </td>
-                  )}
-                </tr>
-              ))
-            ) : (
+        <div className="d-table">
+          <table className="device-table">
+            <thead>
               <tr>
-                <td colSpan={user?.is_admin === 1 ? 6 : 5}>No devices found.</td>
+                <th>Name</th>
+                <th>IP</th>
+                <th>Model</th>
+                <th>Branch</th>
+                <th>Status</th>
+                {user?.isAdmin && <th>Actions</th>}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredDevices.length ? (
+                filteredDevices.map((d) => (
+                  <tr key={d.id}>
+                    <td>{d.name}</td>
+                    <td>{d.ip}</td>
+                    <td>{d.model}</td>
+                    <td>{d.branch?.name || 'N/A'}</td>
+                    <td>{d.status}</td>
+                    {user?.isAdmin && (
+                      <td>
+                        <button
+                          className="btn-edit"
+                          onClick={() => handleEditDevice(d)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn-delete"
+                          onClick={() => handleDeleteDevice(d.id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={user?.isAdmin ? 6 : 5}>No devices found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </main>
 
@@ -236,3 +266,4 @@ export default function Device() {
     </>
   );
 }
+  

@@ -1,11 +1,12 @@
+// src/pages/Branch.jsx
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
-import Footer from "../components/Footer"; // ✅ Add footer like Device.jsx
+import Footer from "../components/Footer";
 import "../styles/Pages.css";
 
 export default function Branch() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [branches, setBranches] = useState([]);
   const [filteredBranches, setFilteredBranches] = useState([]);
   const [search, setSearch] = useState("");
@@ -19,13 +20,10 @@ export default function Branch() {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
- 
-  // Fetch branches
- 
   const fetchBranches = async () => {
     try {
       const res = await api.get("/api/branches", {
-        headers: { Authorization: `Bearer ${user?.token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setBranches(res.data);
       setFilteredBranches(res.data);
@@ -38,9 +36,6 @@ export default function Branch() {
     fetchBranches();
   }, []);
 
- 
-  // Handle search
- 
   useEffect(() => {
     const results = branches.filter((b) =>
       b.name.toLowerCase().includes(search.toLowerCase())
@@ -48,17 +43,11 @@ export default function Branch() {
     setFilteredBranches(results);
   }, [search, branches]);
 
-  
-  // Handle input
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
- 
-  // Handle submit
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -66,12 +55,12 @@ export default function Branch() {
     try {
       if (editingId) {
         await api.put(`/api/branches/${editingId}`, form, {
-          headers: { Authorization: `Bearer ${user?.token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         alert("Branch updated successfully!");
       } else {
         await api.post("/api/branches", form, {
-          headers: { Authorization: `Bearer ${user?.token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         alert("Branch added successfully!");
       }
@@ -88,9 +77,6 @@ export default function Branch() {
     }
   };
 
- 
-  // Handle edit
-  
   const handleEdit = (branch) => {
     setForm({
       name: branch.name,
@@ -103,14 +89,11 @@ export default function Branch() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
- 
-  // Handle delete
- 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this branch?")) return;
     try {
       await api.delete(`/api/branches/${id}`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       alert("Branch deleted successfully!");
       fetchBranches();
@@ -120,17 +103,14 @@ export default function Branch() {
     }
   };
 
- 
-  // JSX
- 
   return (
     <>
       <main className="page-container">
-        <div className="device-header" style={{textAlign:"center"}}>
+        <div className="device-header" style={{ textAlign: "center" }}>
           <h2>Branch Management</h2>
         </div>
 
-        {/* ===== Controls ===== */}
+        {/* Controls */}
         <div className="device-controls">
           <input
             type="text"
@@ -140,11 +120,16 @@ export default function Branch() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {user?.is_admin === 1 && (
+          {user?.isAdmin && (
             <button
               className="Add-btn"
               onClick={() => {
-                setForm({ name: "", manager_name: "", address: "", contact: "" });
+                setForm({
+                  name: "",
+                  manager_name: "",
+                  address: "",
+                  contact: "",
+                });
                 setEditingId(null);
                 setFormVisible(!formVisible);
               }}
@@ -154,8 +139,8 @@ export default function Branch() {
           )}
         </div>
 
-        {/* ===== Add/Edit Form ===== */}
-        {user?.is_admin === 1 && formVisible && (
+        {/* Add/Edit Form */}
+        {user?.isAdmin && formVisible && (
           <section className="add-device">
             <h3>{editingId ? "Edit Branch" : "Add New Branch"}</h3>
             <form onSubmit={handleSubmit}>
@@ -195,7 +180,7 @@ export default function Branch() {
           </section>
         )}
 
-        {/* ===== Table ===== */}
+        {/* Table */}
         <table className="device-table">
           <thead>
             <tr>
@@ -206,7 +191,7 @@ export default function Branch() {
               <th>Contact</th>
               <th>Created At</th>
               <th>Updated At</th>
-              {user?.is_admin === 1 && <th>Actions</th>}
+              {user?.isAdmin && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -220,7 +205,7 @@ export default function Branch() {
                   <td>{b.contact || "—"}</td>
                   <td>{new Date(b.createdAt).toLocaleString()}</td>
                   <td>{new Date(b.updatedAt).toLocaleString()}</td>
-                  {user?.is_admin === 1 && (
+                  {user?.isAdmin && (
                     <td>
                       <button
                         className="btn-edit"
@@ -240,14 +225,13 @@ export default function Branch() {
               ))
             ) : (
               <tr>
-                <td colSpan={user?.is_admin === 1 ? 8 : 7}>No branches found.</td>
+                <td colSpan={user?.isAdmin ? 8 : 7}>No branches found.</td>
               </tr>
             )}
           </tbody>
         </table>
       </main>
 
-      {/* ✅ Footer */}
       <Footer />
     </>
   );

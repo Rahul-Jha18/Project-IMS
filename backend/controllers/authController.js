@@ -1,4 +1,6 @@
+  // backend/controllers/authController.js
 const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
@@ -19,12 +21,15 @@ exports.registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
-  // Sequelize model uses "isAdmin" property, not "is_admin"
+  // 🔒 Hash password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = await User.create({
     name,
     email,
-    password,
-    isAdmin: is_admin,
+    password: hashedPassword,
+    is_admin: !!is_admin, // convert to boolean
+    // role will default to 'user' from model definition
   });
 
   console.log('\n✅ New user registered:', user.email);
@@ -33,11 +38,11 @@ exports.registerUser = asyncHandler(async (req, res) => {
     id: user.id,
     name: user.name,
     email: user.email,
-    is_admin: user.isAdmin ? 1 : 0,
-    token: generateToken(user.id),
+    is_admin: user.is_admin ? 1 : 0,
+    role: user.role,
+    token: generateToken(user.id, user.role),
   });
 });
-
 
 // ========================
 // LOGIN USER
@@ -61,7 +66,9 @@ exports.loginUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid email or password (user not found)');
   }
 
-  const isMatch = await user.matchPassword(password);
+  // ✅ Compare with bcrypt
+  const isMatch = await bcrypt.compare(password, user.password);
+
   console.log('Password entered (plaintext):', password);
   console.log('Stored password hash:', user.password);
   console.log('Password match result:', isMatch);
@@ -77,7 +84,8 @@ exports.loginUser = asyncHandler(async (req, res) => {
     id: user.id,
     name: user.name,
     email: user.email,
-    is_admin: user.isAdmin ? 1 : 0,
-    token: generateToken(user.id),
+    is_admin: user.is_admin ? 1 : 0,
+    role: user.role,
+    token: generateToken(user.id, user.role),
   });
 });

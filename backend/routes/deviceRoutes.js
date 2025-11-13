@@ -1,24 +1,23 @@
+// backend/routes/deviceRoutes.js
 const express = require('express');
+const router = express.Router();
+
 const {
   getDevices,
   createDevice,
   updateDevice,
-  deleteDevice
+  deleteDevice,
 } = require('../controllers/deviceController');
+
 const { protect } = require('../middleware/authMiddleware');
 const { adminOnly } = require('../middleware/adminMiddleware');
-const router = express.Router();
 
-// GET all devices
+// ✅ All logged-in users can VIEW devices
 router.get('/', protect, getDevices);
 
-// CREATE new device
+// ✅ Only admin can CREATE/UPDATE/DELETE devices
 router.post('/', protect, adminOnly, createDevice);
-
-// UPDATE device by ID
 router.put('/:id', protect, adminOnly, updateDevice);
-
-// DELETE device by ID
 router.delete('/:id', protect, adminOnly, deleteDevice);
 
 module.exports = router;

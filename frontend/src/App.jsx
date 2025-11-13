@@ -12,14 +12,19 @@ import AdminRequests from './pages/AdminRequests';
 import Nav from './components/Nav';
 import { useAuth } from './context/AuthContext';
 
+// ✅ Protect normal user routes
 function PrivateRoute({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" replace />;
 }
 
+// ✅ Protect admin and sub-admin routes
 function AdminRoute({ children }) {
   const { user } = useAuth();
-  return user?.isAdmin ? children : <Navigate to="/" replace />;
+  if (user?.role === 'admin' || user?.role === 'subadmin') {
+    return children;
+  }
+  return <Navigate to="/" replace />;
 }
 
 export default function App() {
@@ -33,14 +38,14 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* === Protected Routes === */}
+        {/* === Protected Routes (all logged in users) === */}
         <Route path="/" element={<PrivateRoute><Landing /></PrivateRoute>} />
         <Route path="/InfoPage" element={<PrivateRoute><InfoPage /></PrivateRoute>} />
         <Route path="/devices" element={<PrivateRoute><Device /></PrivateRoute>} />
         <Route path="/branches" element={<PrivateRoute><Branch /></PrivateRoute>} />
         <Route path="/Request" element={<PrivateRoute><Request /></PrivateRoute>} />
 
-        {/* === Admin Only === */}
+        {/* === Admin & Sub-Admin Routes === */}
         <Route
           path="/AdminRequests"
           element={

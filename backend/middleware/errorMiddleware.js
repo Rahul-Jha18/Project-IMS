@@ -1,7 +1,8 @@
-// middleware/errorMiddleware.js
+// backend/middleware/errorMiddleware.js
 
 exports.errorHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  const statusCode =
+    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
 
   res.status(statusCode).json({
     success: false,

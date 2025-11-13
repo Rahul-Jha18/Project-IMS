@@ -11,24 +11,27 @@ export default function Landing() {
       <main className="landing-page">
         <section className="greeting-section">
           <h2>Welcome{user?.name ? `, ${user.name}` : ''}!</h2>
-          <p>We’re glad to have you here. This is page where you can access and manage various features of the system.</p>
+          <p>
+            We’re glad to have you here. This page lets you access and manage
+            various features of the Inventory Management System.
+          </p>
         </section>
 
-        {/* Features Section */}
+        {/* === Features Section === */}
         <section className="features-section">
           <h3>Features of the System</h3>
           <p>Here are some of the key functionalities you can use:</p>
+
           <div className="features-list">
-            {/* Feature 1 */}
+
+            {/* === Feature 1: Devices === */}
             <div className="feature-box">
               <div className="feature-content">
                 <h4>View Devices</h4>
                 <p>
-                  Track records of all devices used across the organization of all branches and Departments.
-                  Monitor their current status, usage, and performance in real-time.
-                  Maintain a complete record of each device for auditing and management.
-                  Identify issues quickly and ensure every device is functioning optimally.
-                  Streamline device management across all locations from a single dashboard.
+                  Track records of all devices used across the organization’s
+                  branches and departments. Monitor status, performance, and
+                  maintain a complete record for auditing and management.
                 </p>
                 <a href="/devices" className="feature-link">Visit</a>
               </div>
@@ -40,16 +43,14 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Feature 2 */}
+            {/* === Feature 2: Branches === */}
             <div className="feature-box">
-              <div className='feature-content'>
+              <div className="feature-content">
                 <h4>Manage Branches</h4>
                 <p>
-                  Maintain complete records of all branches, including employee details, IP addresses, and locations.
-                  Monitor and manage branch-specific information efficiently from a centralized system.
-                  Track activities and resources for each branch in real-time.
-                  Ensure accurate data management and quick access to branch information.
-                  Simplify branch operations and maintain organizational oversight effortlessly.
+                  Maintain detailed records of all branches, including employees,
+                  IPs, and locations. Monitor and manage operations efficiently
+                  from a centralized system.
                 </p>
                 <a href="/branches" className="feature-link">Visit</a>
               </div>
@@ -60,14 +61,39 @@ export default function Landing() {
                 />
               </div>
             </div>
+
+            {/* === Feature 3: Requests (different for admin & users) === */}
+            <div className="feature-box">
+              <div className="feature-content">
+                <h4>{user?.isAdmin ? 'Manage User Requests' : 'Submit a Request'}</h4>
+                <p>
+                  {user?.isAdmin
+                    ? 'View, track, and update requests submitted by users. Approve or resolve them as needed to maintain smooth operations.'
+                    : 'Submit new requests for device issues, maintenance, or IT support, and track their progress easily.'}
+                </p>
+                <a
+                  href={user?.isAdmin ? '/AdminRequests' : '/Request'}
+                  className="feature-link"
+                >
+                  {user?.isAdmin ? 'Manage Requests' : 'Submit Request'}
+                </a>
+              </div>
+              <div className="feature-image">
+                <img
+                  src={user?.isAdmin 
+                    ? 'https://cdn-icons-png.flaticon.com/512/2920/2920255.png' 
+                    : 'https://cdn-icons-png.flaticon.com/512/1077/1077976.png'}
+                  alt="Requests"
+                />
+              </div>
+            </div>
+
           </div>
         </section>
 
-        {/* Spacer before Footer */}
         <div className="footer-spacer" />
       </main>
 
-      {/* Footer */}
       <Footer />
     </>
   );

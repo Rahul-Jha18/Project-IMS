@@ -1,24 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function Footer() {
+  // Ensure footer stays at the bottom dynamically
+  useEffect(() => {
+    const body = document.body;
+    body.style.display = 'flex';
+    body.style.flexDirection = 'column';
+    body.style.minHeight = '100vh';
+    const root = document.getElementById('root');
+    if (root) root.style.flex = '1';
+  }, []);
+
   return (
-    <footer className="footer">
+    <footer className="footer" style={{ marginTop: 'auto' }}>
       <div className="container footer-content">
+        {/* About Section */}
         <div className="footer-about">
           <h4>Nepal Life Insurance</h4>
           <p>
-            Centralized system to manage devices, branches, and organizational records efficiently. 
-            Keep track of resources, activities, and performance in one place.
+            Centralized system to manage devices, branches, and organizational
+            records efficiently. Keep track of resources, activities, and
+            performance in one place.
           </p>
         </div>
 
         {/* Quick Links */}
+        <div className='links'>
         <div className="footer-links">
           <h5>Quick Links</h5>
           <ul>
             <li><a href="/">Home</a></li>
+            <li><a href="/InfoPage">Information</a></li>
             <li><a href="/branches">Branches</a></li>
-            <li><a href="/devices">Devices</a></li> 
+            <li><a href="/devices">Devices</a></li>
+            <li><a href="/Request">Request</a></li>
           </ul>
         </div>
 
@@ -32,6 +47,7 @@ export default function Footer() {
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
           </div>
         </div>
+        </div> 
       </div>
 
       {/* Footer bottom */}

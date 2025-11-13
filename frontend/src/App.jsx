@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Landing from './pages/Landing';
-import InfoPage from './pages/InfoPage'; 
+import InfoPage from './pages/InfoPage';
 import Device from './pages/Device';
 import Branch from './pages/Branch';
 import Request from './pages/Request';
@@ -19,30 +19,39 @@ function PrivateRoute({ children }) {
 
 function AdminRoute({ children }) {
   const { user } = useAuth();
-  return user && user.role === 'admin' ? children : <Navigate to="/" replace />;
+  return user?.isAdmin ? children : <Navigate to="/" replace />;
 }
 
 export default function App() {
+  const { user } = useAuth();
+
   return (
     <div>
       <Nav />
       <Routes>
-        {/* Public routes */}
+        {/* === Public Routes === */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected routes */}
+        {/* === Protected Routes === */}
         <Route path="/" element={<PrivateRoute><Landing /></PrivateRoute>} />
-        <Route path="/InfoPage" element={<PrivateRoute><InfoPage /></PrivateRoute>} /> 
+        <Route path="/InfoPage" element={<PrivateRoute><InfoPage /></PrivateRoute>} />
         <Route path="/devices" element={<PrivateRoute><Device /></PrivateRoute>} />
         <Route path="/branches" element={<PrivateRoute><Branch /></PrivateRoute>} />
-        <Route path="/request" element={<PrivateRoute><Request /></PrivateRoute>} />
+        <Route path="/Request" element={<PrivateRoute><Request /></PrivateRoute>} />
 
-        {/* Admin-only route */}
-        <Route path="/admin/requests" element={<AdminRoute><AdminRequests /></AdminRoute>} />
+        {/* === Admin Only === */}
+        <Route
+          path="/AdminRequests"
+          element={
+            <AdminRoute>
+              <AdminRequests />
+            </AdminRoute>
+          }
+        />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* === Fallback === */}
+        <Route path="*" element={<Navigate to={user ? '/' : '/login'} replace />} />
       </Routes>
     </div>
   );

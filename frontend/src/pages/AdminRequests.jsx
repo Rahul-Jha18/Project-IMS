@@ -25,11 +25,11 @@ export default function AdminRequests() {
   const handleStatusChange = async (id, newStatus) => {
     try {
       await updateRequestStatus(token, id, newStatus);
-      alert(`✅ Request marked as ${newStatus}`);
+      alert(`Request marked as ${newStatus}`);
       fetchRequests();
     } catch (err) {
       console.error(err);
-      alert('❌ Failed to update status');
+      alert('Failed to update status');
     }
   };
 
@@ -37,6 +37,7 @@ export default function AdminRequests() {
     <>
       <main className="device-page">
         <h2>Manage User Requests</h2>
+        <div className='d-table'>
         <table className="device-table">
           <thead>
             <tr>
@@ -74,6 +75,7 @@ export default function AdminRequests() {
             )}
           </tbody>
         </table>
+        </div>
       </main>
       <Footer />
     </>

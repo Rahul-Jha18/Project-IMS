@@ -104,6 +104,7 @@ export default function InfoPage() {
         </div>
 
         {/* 📋 Info Table */}
+        <div className='d-table'>
         <table className="device-table">
           <thead>
             <tr>
@@ -139,6 +140,7 @@ export default function InfoPage() {
             )}
           </tbody>
         </table>
+        </div>
       </main>
 
       <Footer />

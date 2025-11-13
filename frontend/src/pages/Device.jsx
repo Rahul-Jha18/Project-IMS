@@ -191,8 +191,9 @@ export default function Device() {
             </form>
           </section>
         )}
-
+        
         {/* ===== Devices Table ===== */}
+        <div className='d-table'>
         <table className="device-table">
           <thead>
             <tr>
@@ -228,6 +229,7 @@ export default function Device() {
             )}
           </tbody>
         </table>
+        </div>
       </main>
 
       <Footer />

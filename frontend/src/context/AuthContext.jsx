@@ -12,9 +12,11 @@ export const AuthProvider = ({ children }) => {
     return null;
   });
 
+  // Keep Authorization header synced with user token
   useEffect(() => {
     if (user?.token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+
       if (user.remember) {
         localStorage.setItem('ims_user', JSON.stringify(user));
         sessionStorage.removeItem('ims_user');
@@ -29,8 +31,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
+  // ✅ Normalize backend field here (backend sends is_admin = 0 or 1)
   const login = (data, remember = true) => {
-  setUser({ ...data, is_admin: data.is_admin ?? 0, remember });
+    const normalizedUser = {
+      ...data,
+      isAdmin: data.is_admin === 1 || data.is_admin === true, // convert numeric/boolean to boolean
+      remember,
+    };
+    setUser(normalizedUser);
   };
 
   const logout = () => setUser(null);
@@ -43,3 +51,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+  

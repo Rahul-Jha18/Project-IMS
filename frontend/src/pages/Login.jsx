@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -14,15 +15,15 @@ export default function Login() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('ims_creds');
-      if (raw) {
-        const creds = JSON.parse(raw);
-        if (creds?.email) setEmail(creds.email);
-        if (creds?.password) setPassword(creds.password);
+      const saved = localStorage.getItem('ims_creds');
+      if (saved) {
+        const creds = JSON.parse(saved);
+        setEmail(creds.email || '');
+        setPassword(creds.password || '');
         setRemember(true);
       }
-    } catch (e) {
-      console.warn('Failed to read saved credentials', e);
+    } catch (err) {
+      console.warn('Failed to load saved credentials', err);
     }
   }, []);
 
@@ -30,25 +31,23 @@ export default function Login() {
     e.preventDefault();
     setError('');
     try {
-      // Call the API to login
       const data = await loginApi(email, password);
-      
-      try {
-        // If remember is checked, store credentials in localStorage, else remove them
-        if (remember) {
-          localStorage.setItem('ims_creds', JSON.stringify({ email, password }));
-        } else {
-          localStorage.removeItem('ims_creds');
-        }
-      } catch (err) {
-        console.warn('Could not persist credentials', err);
+
+      if (remember) {
+        localStorage.setItem('ims_creds', JSON.stringify({ email, password }));
+      } else {
+        localStorage.removeItem('ims_creds');
       }
 
-      // Call the login function in AuthContext to update the user state
-      login(data, remember); 
+      login(data);
 
-      // Redirect to landing page after successful login
-      navigate('/landing'); // Adjust this path to your actual landing page route
+      // ✅ Redirect based on role
+      if (data.isAdmin) {
+        navigate('/AdminRequests');
+      } else {
+        navigate('/');
+      }
+
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -72,7 +71,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <div style={{ margin: '8px 0' }}>
-          <label style={{ userSelect: 'none' }}>
+          <label>
             <input
               type="checkbox"
               checked={remember}

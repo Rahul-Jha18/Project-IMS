@@ -115,10 +115,10 @@ export default function Nav() {
         <div className="news-bar">
           <div className="news-ticker">
             <span>
-              <strong>News & Updates:</strong> Why you always in a mood?
-              ‘*****’ ‘round, actin’ brand new. I ain’t tryna tell you what to do,
-              but try to play it cool. Baby, <b>I ain’t playin’ by your rules — everything looks better with a View.</b> 
-              - <i>by 2KGolden</i>
+              <strong>News & Updates:</strong> <b>Wake up to Reality.</b> Nothing ever goes as planned in this accursed world. 
+              The longer you live, the more you realize that the only things that truly exist in this
+               reality are merely pain, suffering and futility. Listen, everywhere you look in this world,
+               wherever there is light, there will always be shadows to be found as well.<i>-by Madara Uchiha</i>
             </span>
           </div>
         </div>

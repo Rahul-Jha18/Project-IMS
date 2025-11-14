@@ -12,13 +12,13 @@ import AdminRequests from './pages/AdminRequests';
 import Nav from './components/Nav';
 import { useAuth } from './context/AuthContext';
 
-// ✅ Protect normal user routes
+//  Protect normal user routes
 function PrivateRoute({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" replace />;
 }
 
-// ✅ Protect admin and sub-admin routes
+//  Protect admin and sub-admin routes
 function AdminRoute({ children }) {
   const { user } = useAuth();
   if (user?.role === 'admin' || user?.role === 'subadmin') {

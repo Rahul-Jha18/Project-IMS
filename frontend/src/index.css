@@ -164,7 +164,7 @@ main {
   background-size: cover;
 }
 .landing-page {
-  padding: 20px;
+  padding: 2px;
   text-align: center;
   background: linear-gradient(180deg, white, rgba(70, 192, 248, 0.445), rgba(99, 188, 247, 0.885));
 }
@@ -190,7 +190,7 @@ main {
   margin-top: 40px;
   background:linear-gradient(180deg, rgba(192, 181, 181, 0.028) , rgba(14, 13, 13, 0.396), rgba(5, 5, 5, 0.564));
   padding: 5px;
-  border-radius: 8px;
+  border-radius: 2px;
 }
 
 .features-section h3 {
@@ -202,19 +202,17 @@ main {
 .features-list {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 9px;
 }
-
 .feature-box {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  background-color: #f9f9f9;
+  background-color: rgba(249, 249, 249, 0.800);
+  border:1.5px solid rgba(21, 23, 26, 0.452);
   padding: 30px;
-  border: 1px solid #ddd;
   border-radius: 10px;
 }
-
 .feature-content {
   flex: 1;
   padding-right: 30px;

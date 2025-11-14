@@ -233,7 +233,7 @@ const canAct1 =isSubAdmin;
         {/* ==== Requests Table ==== */}
           <table className="device-table">
             <thead>
-              <tr>
+              <tr className='req-tr'>
                 <th>User</th>
                 <th>Type</th>
                 <th>Branch Name</th>

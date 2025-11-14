@@ -1,6 +1,6 @@
 /* Global */
 body {
-  background: #f0f2f5;
+  background: transparent;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
@@ -15,7 +15,7 @@ body {
 }
 
 .form {
-  background: #fff;
+  background: transparent;
   padding: 40px 30px;
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);

@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 import '../styles/Pages.css';
 
 export default function Device() {
-  const { user, token } = useAuth();
+  const { user, token, isAdmin, isSubAdmin } = useAuth();
   const [devices, setDevices] = useState([]);
   const [filteredDevices, setFilteredDevices] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -23,7 +23,6 @@ export default function Device() {
     status: 'Active',
   });
 
-  // Fetch branches
   const fetchBranches = async () => {
     try {
       const data = await getBranches(token);
@@ -33,7 +32,6 @@ export default function Device() {
     }
   };
 
-  // Fetch devices
   const fetchDevices = async (branchId = '') => {
     try {
       const data = await getDevices(token, branchId);
@@ -82,7 +80,14 @@ export default function Device() {
         });
         alert(' Device added successfully!');
       }
-      setNewDevice({ id: null, name: '', ip: '', model: '', branchId: '', status: 'Active' });
+      setNewDevice({
+        id: null,
+        name: '',
+        ip: '',
+        model: '',
+        branchId: '',
+        status: 'Active',
+      });
       setShowForm(false);
       fetchDevices(selectedBranch);
     } catch (err) {
@@ -109,6 +114,8 @@ export default function Device() {
     }
   };
 
+  const canManage = isAdmin || isSubAdmin;
+
   return (
     <>
       <main className="device-page">
@@ -122,7 +129,9 @@ export default function Device() {
             <select value={selectedBranch} onChange={handleBranchChange}>
               <option value="">All Branches</option>
               {branches.map((b) => (
-                <option key={b.id} value={b.id}>{b.name}</option>
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
               ))}
             </select>
           </div>
@@ -135,8 +144,7 @@ export default function Device() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {/* Only admin can see Add button */}
-          {user?.isAdmin && (
+          {canManage && (
             <button
               className="Add-btn"
               onClick={() => {
@@ -156,8 +164,7 @@ export default function Device() {
           )}
         </div>
 
-        {/* ===== Only Admin Can See Add/Edit Form ===== */}
-        {user?.isAdmin && showForm && (
+        {canManage && showForm && (
           <section className="add-device">
             <h3>{newDevice.id ? 'Edit Device' : 'Add New Device'}</h3>
             <form onSubmit={handleSubmitDevice}>
@@ -193,7 +200,9 @@ export default function Device() {
               >
                 <option value="">Select Branch</option>
                 {branches.map((b) => (
-                  <option key={b.id} value={b.id}>{b.name}</option>
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
                 ))}
               </select>
               <select
@@ -212,7 +221,6 @@ export default function Device() {
           </section>
         )}
 
-        {/* ===== Devices Table ===== */}
         <div className="d-table">
           <table className="device-table">
             <thead>
@@ -222,7 +230,7 @@ export default function Device() {
                 <th>Model</th>
                 <th>Branch</th>
                 <th>Status</th>
-                {user?.isAdmin && <th>Actions</th>}
+                {canManage && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -234,7 +242,7 @@ export default function Device() {
                     <td>{d.model}</td>
                     <td>{d.branch?.name || 'N/A'}</td>
                     <td>{d.status}</td>
-                    {user?.isAdmin && (
+                    {canManage && (
                       <td>
                         <button
                           className="btn-edit"
@@ -242,19 +250,21 @@ export default function Device() {
                         >
                           Edit
                         </button>
-                        <button
-                          className="btn-delete"
-                          onClick={() => handleDeleteDevice(d.id)}
-                        >
-                          Delete
-                        </button>
+                        {isAdmin && (
+                          <button
+                            className="btn-delete"
+                            onClick={() => handleDeleteDevice(d.id)}
+                          >
+                            Delete
+                          </button>
+                        )}
                       </td>
                     )}
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={user?.isAdmin ? 6 : 5}>No devices found.</td>
+                  <td colSpan={canManage ? 6 : 5}>No devices found.</td>
                 </tr>
               )}
             </tbody>
@@ -266,4 +276,3 @@ export default function Device() {
     </>
   );
 }
-  

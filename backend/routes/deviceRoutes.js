@@ -10,14 +10,16 @@ const {
 } = require('../controllers/deviceController');
 
 const { protect } = require('../middleware/authMiddleware');
-const { adminOnly } = require('../middleware/adminMiddleware');
+const { adminOrSubadmin, adminOnlyDelete } = require('../middleware/adminMiddleware');
 
 // ✅ All logged-in users can VIEW devices
 router.get('/', protect, getDevices);
 
-// ✅ Only admin can CREATE/UPDATE/DELETE devices
-router.post('/', protect, adminOnly, createDevice);
-router.put('/:id', protect, adminOnly, updateDevice);
-router.delete('/:id', protect, adminOnly, deleteDevice);
+// ✅ Admin + Subadmin can create and update
+router.post('/', protect, adminOrSubadmin, createDevice);
+router.put('/:id', protect, adminOrSubadmin, updateDevice);
+
+// ✅ ONLY Admin can delete
+router.delete('/:id', protect, adminOnlyDelete, deleteDevice);
 
 module.exports = router;

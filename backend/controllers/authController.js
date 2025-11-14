@@ -4,9 +4,9 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
-// ========================
+
 // REGISTER USER
-// ========================
+
 exports.registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, is_admin = 0 } = req.body || {};
 
@@ -21,7 +21,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
-  // 🔒 Hash password
+  //  Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -29,7 +29,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
     is_admin: !!is_admin, // convert to boolean
-    // role will default to 'user' from model definition
+    
   });
 
   console.log('\n✅ New user registered:', user.email);
@@ -44,9 +44,9 @@ exports.registerUser = asyncHandler(async (req, res) => {
   });
 });
 
-// ========================
+
 // LOGIN USER
-// ========================
+
 exports.loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
 

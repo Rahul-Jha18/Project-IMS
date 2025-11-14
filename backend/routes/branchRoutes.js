@@ -1,22 +1,25 @@
+// backend/routes/branchRoutes.js
 const express = require('express');
+const router = express.Router();
+
 const {
   getBranches,
   createBranch,
   updateBranch,
-  deleteBranch
+  deleteBranch,
 } = require('../controllers/branchController');
+
 const { protect } = require('../middleware/authMiddleware');
-const { allowRoles } = require('../middleware/roleMiddleware');
+const { adminOrSubadmin, adminOnlyDelete } = require('../middleware/adminMiddleware');
 
-const router = express.Router();
-
+// ✅ everyone logged in can view
 router.get('/', protect, getBranches);
 
-// Admin and Sub-Admin can create or update
-router.post('/', protect, allowRoles('admin', 'sub-admin'), createBranch);
-router.put('/:id', protect, allowRoles('admin', 'sub-admin'), updateBranch);
+// ✅ admin + subadmin can add / edit
+router.post('/', protect, adminOrSubadmin, createBranch);
+router.put('/:id', protect, adminOrSubadmin, updateBranch);
 
-// Only Admin can delete
-router.delete('/:id', protect, allowRoles('admin'), deleteBranch);
+// ✅ only admin can delete
+router.delete('/:id', protect, adminOnlyDelete, deleteBranch);
 
 module.exports = router;

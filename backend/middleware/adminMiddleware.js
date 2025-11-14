@@ -1,15 +1,28 @@
 // backend/middleware/adminMiddleware.js
 
-// Simple admin-only check
-exports.adminOnly = (req, res, next) => {
-  if (req.user && (req.user.is_admin || req.user.role === 'admin')) {
+// ✅ Admin OR Subadmin: can create/update/etc. (no deletes)
+exports.adminOrSubadmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Not authorized' });
+  }
+
+  // In DB: role is 'admin' | 'sub-admin'
+  if (req.user.role === 'admin' || req.user.role === 'sub-admin') {
     return next();
   }
-  res.status(403);
-  throw new Error('Admin access required');
+
+  return res.status(403).json({ message: 'Access denied' });
 };
 
-// Role-based middleware (optional helper)
+// ✅ ONLY Admin: allowed to delete
+exports.adminOnlyDelete = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+  return res.status(403).json({ message: 'Only admin can delete' });
+};
+
+// (Optional) generic helper if you need it elsewhere
 exports.allowRoles = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
@@ -17,4 +30,4 @@ exports.allowRoles = (...roles) => {
     }
     next();
   };
-};  
+};

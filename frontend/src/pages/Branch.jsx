@@ -1,34 +1,36 @@
 // src/pages/Branch.jsx
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import api from "../services/api";
-import Footer from "../components/Footer";
-import "../styles/Pages.css";
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import Footer from '../components/Footer';
+import '../styles/Pages.css';
 
 export default function Branch() {
-  const { user, token } = useAuth();
+  const { token, isAdmin, isSubAdmin } = useAuth();
   const [branches, setBranches] = useState([]);
   const [filteredBranches, setFilteredBranches] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [formVisible, setFormVisible] = useState(false);
   const [form, setForm] = useState({
-    name: "",
-    manager_name: "",
-    address: "",
-    contact: "",
+    name: '',
+    manager_name: '',
+    address: '',
+    contact: '',
   });
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const canManage = isAdmin || isSubAdmin;
+
   const fetchBranches = async () => {
     try {
-      const res = await api.get("/api/branches", {
+      const res = await api.get('/api/branches', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBranches(res.data);
       setFilteredBranches(res.data);
     } catch (err) {
-      console.error("Error fetching branches:", err);
+      console.error('Error fetching branches:', err);
     }
   };
 
@@ -50,6 +52,7 @@ export default function Branch() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!canManage) return;
     setLoading(true);
 
     try {
@@ -57,60 +60,62 @@ export default function Branch() {
         await api.put(`/api/branches/${editingId}`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Branch updated successfully!");
+        alert('Branch updated successfully!');
       } else {
-        await api.post("/api/branches", form, {
+        await api.post('/api/branches', form, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Branch added successfully!");
+        alert('Branch added successfully!');
       }
 
-      setForm({ name: "", manager_name: "", address: "", contact: "" });
+      setForm({ name: '', manager_name: '', address: '', contact: '' });
       setEditingId(null);
       setFormVisible(false);
       fetchBranches();
     } catch (err) {
-      console.error("Error saving branch:", err);
-      alert("Failed to save branch");
+      console.error('Error saving branch:', err);
+      alert('Failed to save branch');
     } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = (branch) => {
+    if (!canManage) return;
     setForm({
       name: branch.name,
-      manager_name: branch.manager_name || "",
-      address: branch.address || "",
-      contact: branch.contact || "",
+      manager_name: branch.manager_name || '',
+      address: branch.address || '',
+      contact: branch.contact || '',
     });
     setEditingId(branch.id);
     setFormVisible(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this branch?")) return;
+    if (!isAdmin) return; // only admin
+    if (!window.confirm('Are you sure you want to delete this branch?')) return;
+
     try {
       await api.delete(`/api/branches/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Branch deleted successfully!");
+      alert('Branch deleted successfully!');
       fetchBranches();
     } catch (err) {
-      console.error("Error deleting branch:", err);
-      alert("Failed to delete branch");
+      console.error('Error deleting branch:', err);
+      alert('Failed to delete branch');
     }
   };
 
   return (
     <>
       <main className="page-container">
-        <div className="device-header" style={{ textAlign: "center" }}>
+        <div className="device-header" style={{ textAlign: 'center' }}>
           <h2>Branch Management</h2>
         </div>
 
-        {/* Controls */}
         <div className="device-controls">
           <input
             type="text"
@@ -120,29 +125,28 @@ export default function Branch() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {user?.isAdmin && (
+          {canManage && (
             <button
               className="Add-btn"
               onClick={() => {
                 setForm({
-                  name: "",
-                  manager_name: "",
-                  address: "",
-                  contact: "",
+                  name: '',
+                  manager_name: '',
+                  address: '',
+                  contact: '',
                 });
                 setEditingId(null);
                 setFormVisible(!formVisible);
               }}
             >
-              {formVisible ? "Close Form" : "Add Branch"}
+              {formVisible ? 'Close Form' : 'Add Branch'}
             </button>
           )}
         </div>
 
-        {/* Add/Edit Form */}
-        {user?.isAdmin && formVisible && (
+        {canManage && formVisible && (
           <section className="add-device">
-            <h3>{editingId ? "Edit Branch" : "Add New Branch"}</h3>
+            <h3>{editingId ? 'Edit Branch' : 'Add New Branch'}</h3>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -174,13 +178,12 @@ export default function Branch() {
                 onChange={handleChange}
               />
               <button type="submit" disabled={loading}>
-                {editingId ? "Update Branch" : "Add Branch"}
+                {editingId ? 'Update Branch' : 'Add Branch'}
               </button>
             </form>
           </section>
         )}
 
-        {/* Table */}
         <table className="device-table">
           <thead>
             <tr>
@@ -191,7 +194,7 @@ export default function Branch() {
               <th>Contact</th>
               <th>Created At</th>
               <th>Updated At</th>
-              {user?.isAdmin && <th>Actions</th>}
+              {canManage && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -200,12 +203,12 @@ export default function Branch() {
                 <tr key={b.id}>
                   <td>{b.id}</td>
                   <td>{b.name}</td>
-                  <td>{b.manager_name || "—"}</td>
-                  <td>{b.address || "—"}</td>
-                  <td>{b.contact || "—"}</td>
+                  <td>{b.manager_name || '—'}</td>
+                  <td>{b.address || '—'}</td>
+                  <td>{b.contact || '—'}</td>
                   <td>{new Date(b.createdAt).toLocaleString()}</td>
                   <td>{new Date(b.updatedAt).toLocaleString()}</td>
-                  {user?.isAdmin && (
+                  {canManage && (
                     <td>
                       <button
                         className="btn-edit"
@@ -213,19 +216,21 @@ export default function Branch() {
                       >
                         Edit
                       </button>
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDelete(b.id)}
-                      >
-                        Delete
-                      </button>
+                      {isAdmin && (
+                        <button
+                          className="btn-delete"
+                          onClick={() => handleDelete(b.id)}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </td>
                   )}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={user?.isAdmin ? 8 : 7}>No branches found.</td>
+                <td colSpan={canManage ? 8 : 7}>No branches found.</td>
               </tr>
             )}
           </tbody>

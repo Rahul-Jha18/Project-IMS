@@ -6,13 +6,17 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const stored =
-      JSON.parse(localStorage.getItem('ims_user')) ||
-      JSON.parse(sessionStorage.getItem('ims_user'));
-    return stored || null;
+    try {
+      return (
+        JSON.parse(localStorage.getItem('ims_user')) ||
+        JSON.parse(sessionStorage.getItem('ims_user')) ||
+        null
+      );
+    } catch {
+      return null;
+    }
   });
 
-  // ✅ Sync axios headers & storage
   useEffect(() => {
     if (user?.token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
@@ -31,20 +35,22 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // ✅ Normalize backend data (role-based)
   const login = (data, remember = true) => {
-    const role = (data.role || '').toLowerCase();
+    const backendRole = data.role || ''; // 'admin' | 'sub-admin' | 'user'
+    const normalizedRole = backendRole.toLowerCase().replace('-', ''); // 'sub-admin' -> 'subadmin'
+
     const normalizedUser = {
       id: data.id,
       name: data.name,
       email: data.email,
       token: data.token,
-      role,
-      isAdmin: role === 'admin',
-      isSubAdmin: role === 'subadmin',
-      isUser: role === 'user',
+      role: normalizedRole, // 'admin' | 'subadmin' | 'user'
+      isAdmin: normalizedRole === 'admin',
+      isSubAdmin: normalizedRole === 'subadmin',
+      isUser: normalizedRole === 'user',
       remember,
     };
+
     setUser(normalizedUser);
   };
 

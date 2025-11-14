@@ -48,12 +48,23 @@ exports.getAllRequests = asyncHandler(async (req, res) => {
     include: [
       {
         model: User,
-        as: 'user', // alias must match association
-        attributes: ['id', 'name', 'email', 'role'], // ⬅️ added role
+        as: 'user',
+        attributes: ['id', 'name', 'email', 'role'],
+      },
+      {
+        model: Branch,
+        as: 'branch',
+        attributes: ['id', 'name'],  // show branch name
+      },
+      {
+        model: Device,
+        as: 'device',
+        attributes: ['id', 'name', 'ip'], // show device name & IP
       },
     ],
     order: [['createdAt', 'DESC']],
   });
+
   res.json(requests);
 });
 

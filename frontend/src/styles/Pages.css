@@ -127,7 +127,7 @@ p[style*="color:red"] {
   overflow-x: auto;
 }
 
-.device-header {
+.device-header{
   font-size: 1.25rem;
   margin-bottom: 1rem;
 }
@@ -358,11 +358,17 @@ p[style*="color:red"] {
   min-height: 80vh;
   background: linear-gradient(45deg, rgba(0,183,255,0.425), white, rgba(90,185,223,0.493));
 }
+.Request-header{
+  font-size: 1.25rem;
+  display: flex; 
+  flex-direction: column;
+  margin-bottom: 3rem;
+}
 
 .request-page h2 {
   font-size: 2rem;
   color: #1e293b;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   border-bottom: 2px solid #64748b;
   padding-bottom: 0.5rem;
 }

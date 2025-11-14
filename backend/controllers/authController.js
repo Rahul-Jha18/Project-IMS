@@ -78,7 +78,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid email or password (password mismatch)');
   }
 
-  console.log('✅ Login successful for:', user.email);
+  console.log(' Login successful for:', user.email);
 
   res.json({
     id: user.id,

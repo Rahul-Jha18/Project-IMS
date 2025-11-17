@@ -23,6 +23,9 @@ export default function Device() {
     status: 'Active',
   });
 
+  // 🔹 NEW: filter by device type (Printer / Switch / Camera / etc.)
+  const [deviceFilter, setDeviceFilter] = useState('');
+
   const fetchBranches = async () => {
     try {
       const data = await getBranches(token);
@@ -34,7 +37,7 @@ export default function Device() {
 
   const fetchDevices = async (branchId = '') => {
     try {
-      const data = await getDevices(token, branchId);
+      const data = await getDevices(token, branchId); // already filtered by branch on backend
       setDevices(data);
       setFilteredDevices(data);
     } catch (err) {
@@ -47,12 +50,39 @@ export default function Device() {
     fetchDevices();
   }, []);
 
+  // 🔹 Build device type list from device names (Printer B1 -> "Printer")
+  const deviceTypes = Array.from(
+    new Set(
+      devices
+        .map((d) => (d.name ? d.name.split(' ')[0] : null))
+        .filter(Boolean)
+    )
+  );
+
+  // 🔹 Recalculate filteredDevices when search / devices / deviceFilter change
   useEffect(() => {
-    const results = devices.filter((d) =>
-      d.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const searchLower = search.toLowerCase();
+    const typeLower = deviceFilter.toLowerCase();
+
+    const results = devices.filter((d) => {
+      const name = (d.name || '').toLowerCase();
+
+      const matchesSearch = name.includes(searchLower);
+
+      if (!deviceFilter) {
+        // no device type filter -> only search
+        return matchesSearch;
+      }
+
+      const typeWord = name.split(' ')[0] || '';
+      const matchesType =
+        typeWord === typeLower || name.includes(typeLower);
+
+      return matchesSearch && matchesType;
+    });
+
     setFilteredDevices(results);
-  }, [search, devices]);
+  }, [search, devices, deviceFilter]);
 
   const handleBranchChange = (e) => {
     const branchId = e.target.value;
@@ -124,6 +154,7 @@ export default function Device() {
         </div>
 
         <div className="device-controls">
+          {/* Branch Filter */}
           <div className="branch-filter">
             Filter by Branch:{' '}
             <select value={selectedBranch} onChange={handleBranchChange}>
@@ -136,6 +167,23 @@ export default function Device() {
             </select>
           </div>
 
+          {/* 🔹 Device Type Filter (Printer, Switch, Camera, etc.) */}
+          <div className="branch-filter">
+            Filter by Device Type:{' '}
+            <select
+              value={deviceFilter}
+              onChange={(e) => setDeviceFilter(e.target.value)}
+            >
+              <option value="">All Devices</option>
+              {deviceTypes.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Text Search */}
           <input
             type="text"
             placeholder="Search devices..."

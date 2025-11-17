@@ -65,7 +65,6 @@ export default function Request() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // If branch changes, also reload devices for that branch and clear device selection
     if (name === 'branchId') {
       setFormData((prev) => ({
         ...prev,
@@ -89,7 +88,7 @@ export default function Request() {
       };
 
       await addRequest(token, payload);
-      alert(' Request submitted successfully!');
+      alert('Request submitted successfully!');
 
       setFormData({
         type: 'add_device',
@@ -104,7 +103,6 @@ export default function Request() {
       alert(' Failed to submit request.');
     }
   };
-
   return (
     <>
       <main className="request-page">

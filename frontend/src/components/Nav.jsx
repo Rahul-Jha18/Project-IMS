@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png'
 import { Bell, Menu, X } from 'lucide-react';
 
 export default function Nav() {
@@ -36,7 +37,7 @@ export default function Nav() {
           <div className="brand">
             <Link to="/" onClick={() => setMenuOpen(false)}>
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6NUdvwqedSBwUU48qGwAkHfTH9hw3_aqbRQ&s"
+                src="https://play-lh.googleusercontent.com/zW5KMgLpmTvg0TA4xYIztb5HedXa6mqbAflXHBnNWix5kKetiqtR1ZOqNghuBtleiJkN"
                 className="logo"
                 alt="NLI lOGO"
               />

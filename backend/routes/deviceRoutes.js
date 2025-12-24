@@ -12,14 +12,14 @@ const {
 const { protect } = require('../middleware/authMiddleware');
 const { adminOrSubadmin, adminOnlyDelete } = require('../middleware/adminMiddleware');
 
-// ✅ All logged-in users can VIEW devices
+// All logged-in users can VIEW devices
 router.get('/', protect, getDevices);
 
-// ✅ Admin + Subadmin can create and update
+//  Admin + Subadmin can create and update
 router.post('/', protect, adminOrSubadmin, createDevice);
 router.put('/:id', protect, adminOrSubadmin, updateDevice);
 
-// ✅ ONLY Admin can delete
+//  ONLY Admin can delete
 router.delete('/:id', protect, adminOnlyDelete, deleteDevice);
 
 module.exports = router;

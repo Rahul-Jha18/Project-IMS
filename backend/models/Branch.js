@@ -1,4 +1,4 @@
-// models/Branch.js
+// backend/models/Branch.js
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
@@ -8,6 +8,7 @@ const Branch = sequelize.define('Branch', {
   manager_name: { type: DataTypes.STRING, allowNull: true },
   address: { type: DataTypes.STRING, allowNull: true },
   contact: { type: DataTypes.STRING, allowNull: true },
+  ext_no: { type: DataTypes.STRING, allowNull: true }, // NEW FIELD
 }, {
   timestamps: true,
   tableName: 'branches',
